@@ -1,26 +1,26 @@
-from groq import Groq
-import os
 from dotenv import load_dotenv
-load_dotenv()
+import os
 from google import genai
-client = Groq(
-    api_key = os.getenv("GEMINI_API_KEY")
-)
 
-chat_completion = client.chat.completions.create(
-    messages=[
-        {
-            "role": "system",
-            "content": "You are a helpful assistant."
-        },
-        
-        {
-            "role": "user",
-            "content": "Explain the importance of fast language models",
-        }
-    ],
-    model="gemini-3.7-flash"
-)
+# Load variables from .env
+load_dotenv()
 
-# Print the completion returned by the LLM.
-print(chat_completion.choices[0].message.content)
+# Get Gemini API key
+key = os.getenv("GEMINI_API_KEY")
+
+if key:
+    print("GEMINI_API_KEY is loaded successfully")
+else:
+    print("GEMINI_API_KEY is not set")
+
+# Create Gemini client
+client = genai.Client(api_key=key)
+
+# Create a chat session (the recommended way)
+chat = client.chats.create(model="gemini-3.8-flash")
+
+# Send message to Gemini (the new recommended way)
+response = chat.send_message("what is aditya university")
+
+# Print Gemini's response
+print(response.text)
